@@ -4,7 +4,7 @@ import { getAvailableSlots, bookSlot, cancelBooking } from "../services/api";
 import '@testing-library/jest-dom';
 import React from "react";
 
-jest.mock("./services/api");
+jest.mock("../services/api");
 global.alert = jest.fn(); // Mock window.alert
 jest.mock("axios", () => ({
     create: () => ({

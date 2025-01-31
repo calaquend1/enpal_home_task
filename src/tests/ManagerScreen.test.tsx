@@ -6,7 +6,7 @@ import '@testing-library/jest-dom';
 
 global.alert = jest.fn(); // Mock window.alert
 
-jest.mock("./services/api");
+jest.mock("../services/api");
 jest.mock("axios", () => ({
     create: () => ({
         get: jest.fn(),
