@@ -1,79 +1,104 @@
-## Trade-offs Due to Time Constraints
+# Appointment Booking App
 
-Due to the limited time available for this project, I made several trade-offs to ensure a functional and testable solution within the deadline:
+This is a React-based appointment booking system that allows customers to book meetings with sales managers and allows managers to view and cancel appointments.
 
-### 1. Minimal UI Design  
-- Focused on core functionality rather than styling and animations.  
-- A more polished UI could be implemented with additional time.  
+## Features
 
-### 2. Basic State Management  
-- Used React `useState` and `useEffect` instead of a centralized state management solution like Redux or Context API.  
-- A centralized state would be preferable for scaling the app.  
+- **Customer View**
+  - Select a date to see available slots
+  - Book a time slot
+  - View and cancel existing bookings
 
-### 3. Limited Validation  
-- Basic input checks were added (e.g., ensuring a name is entered before booking).  
-- Additional validation (e.g., preventing duplicate bookings, handling invalid API responses) could improve robustness.  
+- **Manager View**
+  - View all booked slots
+  - Cancel bookings
 
-### 4. Basic Testing Coverage  
-- Core functionalities like **slot booking** and **cancellation** are covered in tests.  
-- More complex edge cases and performance tests were deprioritized due to time constraints.  
+- **API Integration**
+  - Fetch available slots from the backend
+  - Book appointments
+  - Cancel appointments
 
-### 5. Mock API & Simplified Integration  
-- API responses were mocked for testing.  
-- No additional API error recovery mechanisms were implemented.  
+---
 
-### Improvements with More Time  
-If given more time, I would focus on:  
-- Enhancing **UX/UI** with better styling and animations.  
-- Implementing a more **scalable state management** approach.  
-- Expanding **edge case handling** (e.g., preventing duplicate bookings, better error messages).  
-- Improving **test coverage** with more complex scenarios.  
+## Installation
 
+### Clone the Repository
+```sh
+git clone https://github.com/calaquend1/enpal_home_task.git
+cd enpal_home_task
+```
 
+### Install Dependencies
+```sh
+npm install
+```
 
-# Getting Started with Create React App
+### Run the API
+The API is provided as a Docker container. You need to build and run it:
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+```sh
+cd api/
+docker build -t enpal-fe-challenge-api .
+docker run --rm -d -p 3000:3000 enpal-fe-challenge-api
+```
 
-## Available Scripts
+Verify that the API is running:
 
-In the project directory, you can run:
+- Open [http://localhost:3000/swagger](http://localhost:3000/swagger) to view the API documentation.
+- Or open [http://192.168.99.100:3000/swagger](http://192.168.99.100:3000/swagger)
+- 
+### Run the Application
+```sh
+npm start
+```
+The app will be available at `http://localhost:3000` or `http://192.168.99.100:3000/swagger`.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## API Configuration
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+The frontend uses an Axios instance configured with a **proxy**, so requests are correctly forwarded:
 
-### `npm test`
+```ts
+const api = axios.create({
+    baseURL: "/",
+    headers: { "Content-Type": "application/json" },
+});
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Ensure that the API is running at the correct host.
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Running Tests
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The application includes unit and integration tests using Jest and React Testing Library.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Run all tests:
+```sh
+npm test
+```
 
-### `npm run eject`
+### Test Cases Covered:
+- Fetching available slots.
+- Booking a slot.
+- Handling booking failures.
+- Cancelling a booking.
+- Handling API failures.
+- Validation for missing customer names.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+---
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Trade-offs and Considerations
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Due to time constraints, the following trade-offs were made:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- **Styling**: Minimal inline CSS was used instead of a dedicated styling framework.
+- **State Management**: `useState` and `useEffect` were used instead of a more complex solution like Redux.
+- **Error Handling**: Only basic UI feedback is provided for API failures.
+- **No Separation into Reusable Components**: Since there are only two screens (Customer and Manager), I did not extract common UI components (such as modals, buttons, and input fields) into separate reusable components. While this approach reduces maintainability in larger projects, it was acceptable given the limited scope of the task.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+### If more time were available:
+- A dedicated UI framework (e.g., Material UI) would be implemented.
+- More advanced API error handling with retries and user-friendly messages.
+- Enhanced unit and integration tests for deeper coverage.

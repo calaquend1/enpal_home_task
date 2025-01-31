@@ -2,9 +2,9 @@ import axios from "axios";
 
 
 const api = axios.create({
-    baseURL: "/",
-    headers: { "Content-Type": "application/json" },
-  });
+  baseURL: "/",
+  headers: { "Content-Type": "application/json" },
+});
 
 // Function to fetch available slots for a given date
 export const getAvailableSlots = async (date: string) => {
@@ -12,6 +12,7 @@ export const getAvailableSlots = async (date: string) => {
   return response.data;
 };
 
+// Function to fetch all slots
 export const getAllSlots = async () => {
   const response = await api.get(`/slots`);
   return response.data;

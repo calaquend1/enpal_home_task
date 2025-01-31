@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, act } from "@testing-library/react";
-import ManagerScreen from "./ManagerScreen";
-import { getAvailableSlots, cancelBooking, getAllSlots } from "./services/api";
+import ManagerScreen from "../components/ManagerScreen";
+import { getAvailableSlots, cancelBooking, getAllSlots } from "../services/api";
 import React from "react";
 import '@testing-library/jest-dom';
 
@@ -9,11 +9,11 @@ global.alert = jest.fn(); // Mock window.alert
 jest.mock("./services/api");
 jest.mock("axios", () => ({
     create: () => ({
-      get: jest.fn(),
-      post: jest.fn(),
-      delete: jest.fn(),
+        get: jest.fn(),
+        post: jest.fn(),
+        delete: jest.fn(),
     }),
-  }));
+}));
 // Mock API responses
 const mockBookedSlots = [
     { id: "1", startDate: "2024-08-01T10:00:00.000Z", bookedCustomerName: "Alice" },

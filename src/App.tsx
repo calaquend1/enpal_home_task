@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import CustomerScreen from "./CustomerScreen";
-import ManagerScreen from "./ManagerScreen";
+import CustomerScreen from "./components/CustomerScreen";
+import ManagerScreen from "./components/ManagerScreen";
 
 function App() {
   return (

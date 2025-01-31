@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { cancelBooking, getAllSlots } from "./services/api";
-
-// Define Slot type
-type Slot = {
-  id: string;
-  startDate: string;
-  bookedCustomerName: string;
-};
+import { cancelBooking, getAllSlots } from "../services/api";
+import type {Slot} from '../services/types';
 
 function ManagerScreen() {
   const [bookedSlots, setBookedSlots] = useState<Slot[]>([]);

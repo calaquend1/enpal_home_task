@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { getAvailableSlots, bookSlot, cancelBooking } from "./services/api";
+import { getAvailableSlots, bookSlot, cancelBooking } from "../services/api";
+import type {Slot} from '../services/types';
 
-// Define Slot type
-type Slot = {
-  id: string;
-  startDate: string;
-  isBooked: boolean;
-  bookedCustomerName?: string;
-};
 
 function CustomerScreen() {
   const [slots, setSlots] = useState<Slot[]>([]);
@@ -31,7 +25,7 @@ function CustomerScreen() {
       return;
     }
     setErrorMessage("");
-  
+
     bookSlot(selectedSlot.id, userName)
       .then((res) => {
         setSelectedSlot(null);
@@ -60,11 +54,11 @@ function CustomerScreen() {
     <div style={{ textAlign: "center", padding: "20px" }}>
       <h1>Available Slots</h1>
       <label>
-        Select Date: 
-        <input 
-          type="date" 
-          value={selectedDate} 
-          onChange={(e) => setSelectedDate(e.target.value)} 
+        Select Date:
+        <input
+          type="date"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
           style={{ marginLeft: "10px", padding: "5px" }}
         />
       </label>
