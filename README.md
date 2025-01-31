@@ -97,6 +97,8 @@ Due to time constraints, the following trade-offs were made:
 - **State Management**: `useState` and `useEffect` were used instead of a more complex solution like Redux.
 - **Error Handling**: Only basic UI feedback is provided for API failures.
 - **No Separation into Reusable Components**: Since there are only two screens (Customer and Manager), I did not extract common UI components (such as modals, buttons, and input fields) into separate reusable components. While this approach reduces maintainability in larger projects, it was acceptable given the limited scope of the task.
+- **No Authorization for User Roles**: Currently, there is no authentication or authorization system to distinguish between customers and managers. In a real-world scenario, I would implement an authentication system (e.g., JWT, OAuth) to ensure only authorized users can access the manager's dashboard and modify bookings
+
 
 ### If more time were available:
 - A dedicated UI framework (e.g., Material UI) would be implemented.
