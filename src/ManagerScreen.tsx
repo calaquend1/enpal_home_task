@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAvailableSlots, cancelBooking } from "./services/api";
+import { cancelBooking, getAllSlots } from "./services/api";
 
 // Define Slot type
 type Slot = {
@@ -12,7 +12,7 @@ function ManagerScreen() {
   const [bookedSlots, setBookedSlots] = useState<Slot[]>([]);
 
   useEffect(() => {
-    getAvailableSlots("2024-08-01").then((res) => {
+    getAllSlots().then((res) => {
       const filteredSlots = res.data.filter((slot: Slot) => slot.bookedCustomerName);
       setBookedSlots(filteredSlots);
     }).catch(console.error);
@@ -52,6 +52,7 @@ function ManagerScreen() {
               </td>
             </tr>
           ))}
+          {(bookedSlots.length === 0 || !bookedSlots) ? <div>No booked slots</div> : null}
         </tbody>
       </table>
     </div>

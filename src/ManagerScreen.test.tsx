@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import ManagerScreen from "./ManagerScreen";
-import { getAvailableSlots, cancelBooking } from "./services/api";
+import { getAvailableSlots, cancelBooking, getAllSlots } from "./services/api";
 import React from "react";
 import '@testing-library/jest-dom';
 
@@ -24,6 +24,7 @@ describe("ManagerScreen", () => {
     beforeEach(() => {
         (getAvailableSlots as jest.Mock).mockResolvedValue({ data: mockBookedSlots });
         (cancelBooking as jest.Mock).mockResolvedValue({ success: true });
+        (getAllSlots as jest.Mock).mockResolvedValue({ data: mockBookedSlots })
     });
 
     test("renders booked slots", async () => {
@@ -37,5 +38,11 @@ describe("ManagerScreen", () => {
         const cancelButton = await screen.findAllByText("Cancel");
         await act(async () => fireEvent.click(cancelButton[0]));
         expect(cancelBooking).toHaveBeenCalledWith("1");
+    });
+
+    test("handles API failure when fetching booked slots", async () => {
+        (getAllSlots as jest.Mock).mockRejectedValue(new Error("API failure"));
+        await act(async () => render(<ManagerScreen />));
+        expect(screen.getByText("No booked slots")).toBeInTheDocument();
     });
 });

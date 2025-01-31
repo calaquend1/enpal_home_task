@@ -76,15 +76,66 @@ describe("CustomerScreen", () => {
 
     test("cancels a booking successfully", async () => {
         await act(async () => render(<CustomerScreen />))
-        
-        // Find all elements with "13:00 (Booked)" and select the first one
-        const bookedSlotButton = await screen.findByTestId("booked-slot-2"); // Select slot by test ID
-
-      
-        expect(bookedSlotButton).not.toBeNull(); // Ensure there's at least one match
-      
+        const bookedSlotButton = await screen.findByTestId("booked-slot-2");
+        expect(bookedSlotButton).not.toBeNull();
         await act(async () => fireEvent.click(bookedSlotButton));
         await act(async () => fireEvent.click(screen.getByText("Cancel booking")));
         expect(cancelBooking).toHaveBeenCalledWith("2");
       });
+
+    test("handles API failure when fetching slots", async () => {
+        (getAvailableSlots as jest.Mock).mockRejectedValue(new Error("API error"));
+    
+        await act(async () => render(<CustomerScreen />));
+    
+        expect(screen.getByText("Failed to load slots")).toBeInTheDocument();
+    });
+
+    test("shows error when booking a slot without a name", async () => {
+        await act(async () => render(<CustomerScreen />));
+    
+        const slotButton = await screen.findByText("10:00");
+        await act(() => fireEvent.click(slotButton));
+    
+        const bookButton = screen.getByText("Book");
+        await act(() => fireEvent.click(bookButton));
+    
+        expect(screen.getByText("Please enter your name.")).toBeInTheDocument();
+    });
+
+    test("handles API failure when booking a slot", async () => {
+        (bookSlot as jest.Mock).mockRejectedValue(new Error("Booking failed"));
+    
+        await act(async () => render(<CustomerScreen />));
+    
+        const slotButton = await screen.findByText("10:00");
+        await act(() => fireEvent.click(slotButton));
+    
+        const input = screen.getByPlaceholderText("Your Name");
+        await act(() => fireEvent.change(input, { target: { value: "Alice" } }));
+    
+        await act(() => fireEvent.click(screen.getByText("Book")));
+    
+        expect(screen.getByText("Failed to book slot: Unknown error")).toBeInTheDocument();
+    });
+
+    test("handles API failure when canceling a booking", async () => {
+        (cancelBooking as jest.Mock).mockRejectedValue(new Error("Cancel failed"));
+    
+        await act(async () => render(<CustomerScreen />));
+    
+        const bookedSlotButton = await screen.findByText("11:00 (Booked)");
+        await act(() => fireEvent.click(bookedSlotButton));
+    
+        await act(() => fireEvent.click(screen.getByText("Cancel booking")));
+    
+        expect(screen.getByText("Failed to cancel booking: Unknown error")).toBeInTheDocument();
+    });
+
+    test("join call button appears for booked slot", async () => {
+        await act(async () => render(<CustomerScreen />))
+        const bookedSlotButton = await screen.findByText("11:00 (Booked)");
+        await act(async () => fireEvent.click(bookedSlotButton));
+        expect(screen.getByText("Join your call")).toBeInTheDocument();
+    });
 });

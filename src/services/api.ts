@@ -12,6 +12,11 @@ export const getAvailableSlots = async (date: string) => {
   return response.data;
 };
 
+export const getAllSlots = async () => {
+  const response = await api.get(`/slots`);
+  return response.data;
+};
+
 // Function to book a slot with a given slot ID and customer name
 export const bookSlot = async (slotId: string, name: string) => {
   const response = await api.post(`/slots/${slotId}/book`, { name });

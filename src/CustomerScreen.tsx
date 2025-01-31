@@ -15,6 +15,8 @@ function CustomerScreen() {
   const [selectedBookedSlot, setSelectedBookedSlot] = useState<Slot | null>(null);
   const [userName, setUserName] = useState("");
   const [selectedDate, setSelectedDate] = useState<string>("2024-08-01");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [cancelErrorMessage, setCancelErrorMessage] = useState<string>("");
 
   useEffect(() => {
     if (!selectedDate) return;
@@ -25,19 +27,19 @@ function CustomerScreen() {
 
   const handleBooking = () => {
     if (!selectedSlot || !userName.trim()) {
-      alert("Please enter your name.");
+      setErrorMessage("Please enter your name.");
       return;
     }
+    setErrorMessage("");
   
     bookSlot(selectedSlot.id, userName)
       .then((res) => {
-        alert("Slot booked successfully!");
         setSelectedSlot(null);
         setUserName("");
         getAvailableSlots(selectedDate).then((res) => setSlots(res.data));
       })
       .catch((error) => {
-        alert(`Failed to book slot: ${error.response?.data?.message || "Unknown error"}`);
+        setErrorMessage(`Failed to book slot: ${error.response?.data?.message || "Unknown error"}`);
       });
   };
 
@@ -46,13 +48,11 @@ function CustomerScreen() {
 
     cancelBooking(selectedBookedSlot.id)
       .then(() => {
-        alert("Booking cancelled!");
         setSelectedBookedSlot(null);
         getAvailableSlots(selectedDate).then((res) => setSlots(res.data));
       })
       .catch((error) => {
-        console.error("Cancel error:", error.response?.data || error.message);
-        alert(`Failed to cancel booking: ${error.response?.data?.message || "Unknown error"}`);
+        setCancelErrorMessage(`Failed to cancel booking: ${error.response?.data?.message || "Unknown error"}`);
       });
   };
 
@@ -88,6 +88,7 @@ function CustomerScreen() {
             {slot.isBooked && " (Booked)"}
           </button>
         ))}
+        {(slots.length === 0 || !slots) ? <div>Failed to load slots</div> : null}
       </div>
 
       {/* Booking Modal */}
@@ -109,8 +110,9 @@ function CustomerScreen() {
             placeholder="Your Name"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
-            style={{ padding: "5px", marginBottom: "10px", display: "block", width: "100%" }}
+            style={{ padding: "5px", margin: "10px", marginLeft: "15px", display: "block" }}
           />
+          {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
           <button onClick={() => setSelectedSlot(null)}>Cancel</button>
           <button style={{ marginLeft: "10px" }} onClick={handleBooking}>Book</button>
         </div>
@@ -129,13 +131,14 @@ function CustomerScreen() {
           boxShadow: "0 0 10px rgba(0,0,0,0.3)"
         }}>
           <h2>{new Date(selectedBookedSlot.startDate).toLocaleTimeString(navigator.language, {
-  hour: "2-digit",
-  minute: "2-digit",
-})} Booked</h2>
+            hour: "2-digit",
+            minute: "2-digit",
+          })} Booked</h2>
           <p><strong>Hello {selectedBookedSlot.bookedCustomerName}!</strong></p>
           <p><strong>Date:</strong> {new Date(selectedBookedSlot.startDate).toLocaleDateString()}</p>
           <p><strong>Time:</strong> {new Date(selectedBookedSlot.startDate).toLocaleTimeString()}</p>
           <p><strong>Duration:</strong> 60 minutes</p>
+          {cancelErrorMessage && <p style={{ color: "red" }}>{cancelErrorMessage}</p>}
           <button
             style={{ background: "gray", padding: "10px", marginRight: "10px" }}
             onClick={() => setSelectedBookedSlot(null)}
